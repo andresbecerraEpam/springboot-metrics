@@ -40,37 +40,24 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+            - name: prometheus
+              containerPort: 8081   # The port Prometheus can scrape from
+              protocol: TCP
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          envFrom:
-            - configMapRef:
-                name: cm-extra-config
-            - secretRef:
-                name: secret-extra-config
           volumeMounts:
-            - name: configmap-volume
-              mountPath: /config
-              readOnly: true
-            - name: secret-volume
-              mountPath: /secret-config
+            {{- toYaml .Values.volumeMounts | nindent 12 }}
+            - name: prometheus-metrics
+              mountPath: /actuator/prometheus
               readOnly: true
       volumes:
-        - name: configmap-volume
-          configMap:
-            name: cm-extra-config
-            items:
-              - key: application.properties
-                path: application.properties
-        - name: secret-volume
-          secret:
-            secretName: secret-extra-config
-            items:
-              - key: application.secret.properties
-                path: application.secret.properties
+        {{- toYaml .Values.volumes | nindent 8 }}
+        - name: prometheus-metrics
+          emptyDir: {}  # Or another persistent storage solution if needed
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
