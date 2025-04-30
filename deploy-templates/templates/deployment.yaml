@@ -46,14 +46,31 @@ spec:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
+          envFrom:
+            - configMapRef:
+                name: cm-extra-config
+            - secretRef:
+                name: secret-extra-config
           volumeMounts:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-      {{- with .Values.volumes }}
+            - name: configmap-volume
+              mountPath: /config
+              readOnly: true
+            - name: secret-volume
+              mountPath: /secret-config
+              readOnly: true
       volumes:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        - name: configmap-volume
+          configMap:
+            name: cm-extra-config
+            items:
+              - key: application.properties
+                path: application.properties
+        - name: secret-volume
+          secret:
+            secretName: secret-extra-config
+            items:
+              - key: application.secret.properties
+                path: application.secret.properties
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

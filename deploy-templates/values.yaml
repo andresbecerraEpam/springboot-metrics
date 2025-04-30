@@ -90,17 +90,28 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
+volumes:
+  - name: configmap-volume
+    configMap:
+      name: cm-extra-config
+      items:
+        - key: application.properties
+          path: application.properties
+  - name: secret-volume
+    secret:
+      secretName: secret-extra-env
+      items:
+        - key: application.secret.properties
+          path: application.secret.properties
 
 # Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
+volumeMounts:
+  - name: configmap-volume
+    mountPath: /config
+    readOnly: true
+  - name: secret-volume
+    mountPath: /secret-config
+    readOnly: true
 
 # -- https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
 nodeSelector: {}
