@@ -61,5 +61,17 @@ A Helm chart for Kubernetes
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | tolerations | list | `[]` | https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/ |
-| volumeMounts | list | `[]` |  |
-| volumes | list | `[]` |  |
+| volumeMounts[0].mountPath | string | `"/config"` |  |
+| volumeMounts[0].name | string | `"configmap-volume"` |  |
+| volumeMounts[0].readOnly | bool | `true` |  |
+| volumeMounts[1].mountPath | string | `"/secret-config"` |  |
+| volumeMounts[1].name | string | `"secret-volume"` |  |
+| volumeMounts[1].readOnly | bool | `true` |  |
+| volumes[0].configMap.items[0].key | string | `"application.properties"` |  |
+| volumes[0].configMap.items[0].path | string | `"application.properties"` |  |
+| volumes[0].configMap.name | string | `"cm-extra-config"` |  |
+| volumes[0].name | string | `"configmap-volume"` |  |
+| volumes[1].name | string | `"secret-volume"` |  |
+| volumes[1].secret.items[0].key | string | `"application.secret.properties"` |  |
+| volumes[1].secret.items[0].path | string | `"application.secret.properties"` |  |
+| volumes[1].secret.secretName | string | `"secret-extra-env"` |  |
