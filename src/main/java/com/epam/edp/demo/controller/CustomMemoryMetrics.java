@@ -14,8 +14,8 @@ public class CustomMemoryMetrics implements MeterBinder {
     	
         // Registrar la métrica personalizada
     	
-        Gauge.builder("jvm_memory_usage_8d50879d", this, CustomMemoryMetrics::getMemoryUsage)        
-            .description("Custom JVM memory usage metrics with suffix 8d50879d")
+        Gauge.builder("jvm_memory_usage_8673ceff", this, CustomMemoryMetrics::getMemoryUsage)        
+            .description("Custom JVM memory usage metrics with suffix 8673ceff")
             // .baseUnit("bytes")
             .register(registry);
         
